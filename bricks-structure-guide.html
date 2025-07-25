@@ -571,6 +571,303 @@
 
         <div class="section">
             <div class="section-header" onclick="toggleSection(this)">
+                <span>🚀 Real Examples & Walkthroughs</span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="tabs">
+                    <button class="tab active" onclick="showExampleTab('simple')">Simple Class</button>
+                    <button class="tab" onclick="showExampleTab('complex')">Complex Layout</button>
+                    <button class="tab" onclick="showExampleTab('responsive')">Responsive</button>
+                    <button class="tab" onclick="showExampleTab('custom')">Custom CSS</button>
+                    <button class="tab" onclick="showExampleTab('builder')">Class Builder</button>
+                </div>
+
+                <div id="simple" class="tab-content active">
+                    <h3>Example 1: Simple Button Class</h3>
+                    <p>Let's create a custom button class with basic styling:</p>
+                    
+                    <div class="example-box">
+                        <h4>Step 1: Generate Unique ID</h4>
+                        <p>Use a 6-character alphanumeric string (avoid existing IDs):</p>
+                        <div class="json-structure">
+"id": "btn001"  // ⚠️ Check existing IDs first!
+                        </div>
+                    </div>
+
+                    <div class="example-box">
+                        <h4>Step 2: Complete Object Structure</h4>
+                        <div class="json-structure">
+{
+  "id": "btn001",
+  "name": "my-custom-button",
+  "settings": {
+    "_padding": {
+      "top": "var(--space-s)",
+      "right": "var(--space-m)",
+      "bottom": "var(--space-s)",
+      "left": "var(--space-m)"
+    },
+    "_background": {
+      "color": {
+        "raw": "var(--primary)"
+      }
+    },
+    "_typography": {
+      "color": {
+        "raw": "white"
+      },
+      "font-weight": "600",
+      "text-align": "center"
+    },
+    "_border": {
+      "radius": {
+        "top": "var(--radius)",
+        "right": "var(--radius)",
+        "bottom": "var(--radius)",
+        "left": "var(--radius)"
+      }
+    },
+    "_display": "inline-block"
+  },
+  "modified": 1703980800,
+  "user_id": 1,
+  "_exists": false
+}
+                        </div>
+                    </div>
+
+                    <div class="warning-box">
+                        <strong>🎯 Key Points:</strong><br>
+                        • Use CSS variables (var(--primary)) for consistency<br>
+                        • Include timestamp for modified classes<br>
+                        • Follow existing naming conventions<br>
+                        • Always set "_exists": false
+                    </div>
+                </div>
+
+                <div id="complex" class="tab-content">
+                    <h3>Example 2: Complex Grid Layout</h3>
+                    <p>Creating a responsive card grid with custom gaps:</p>
+                    
+                    <div class="example-box">
+                        <div class="json-structure">
+{
+  "id": "grid01",
+  "name": "custom-card-grid",
+  "settings": {
+    "_display": "grid",
+    "_gridTemplateColumns": "repeat(auto-fit, minmax(300px, 1fr))",
+    "_gridGap": "var(--space-l)",
+    "_padding": {
+      "top": "var(--space-xl)",
+      "right": "var(--space-m)",
+      "bottom": "var(--space-xl)",
+      "left": "var(--space-m)"
+    },
+    "_alignItems": "stretch",
+    "_gridTemplateColumns:mobile_landscape": "1fr",
+    "_gridGap:mobile_landscape": "var(--space-m)",
+    "_cssCustom": ".custom-card-grid > * {\n  background: var(--neutral-light);\n  border-radius: var(--radius);\n  padding: var(--space-m);\n  box-shadow: var(--shadow);\n}"
+  },
+  "modified": 1703980900,
+  "user_id": 1,
+  "_exists": false
+}
+                        </div>
+                    </div>
+
+                    <div class="danger-box">
+                        <strong>⚠️ Complex Layout Gotchas:</strong><br>
+                        • Test responsive breakpoints thoroughly<br>
+                        • Use consistent spacing variables<br>
+                        • Validate grid template syntax<br>
+                        • Check browser compatibility for advanced grid features
+                    </div>
+                </div>
+
+                <div id="responsive" class="tab-content">
+                    <h3>Example 3: Responsive Typography</h3>
+                    <p>A heading class that adapts across breakpoints:</p>
+                    
+                    <div class="example-box">
+                        <div class="json-structure">
+{
+  "id": "typo01",
+  "name": "responsive-hero-heading",
+  "settings": {
+    "_typography": {
+      "font-size": "clamp(2rem, 5vw, 4rem)",
+      "line-height": "1.2",
+      "font-weight": "700",
+      "text-align": "center",
+      "color": {
+        "raw": "var(--text-primary)"
+      }
+    },
+    "_margin": {
+      "bottom": "var(--space-l)"
+    },
+    "_typography:mobile_landscape": {
+      "font-size": "2.5rem",
+      "text-align": "left"
+    },
+    "_typography:tablet_portrait": {
+      "font-size": "3rem"
+    },
+    "_margin:mobile_landscape": {
+      "bottom": "var(--space-m)"
+    }
+  },
+  "modified": 1703981000,
+  "user_id": 1,
+  "_exists": false
+}
+                        </div>
+                    </div>
+
+                    <div class="warning-box">
+                        <strong>📱 Responsive Best Practices:</strong><br>
+                        • Use clamp() for fluid typography<br>
+                        • Test on actual devices<br>
+                        • Consider mobile-first approach<br>
+                        • Don't override every property on every breakpoint
+                    </div>
+                </div>
+
+                <div id="custom" class="tab-content">
+                    <h3>Example 4: Advanced Custom CSS</h3>
+                    <p>Using _cssCustom for complex styling that can't be achieved with standard properties:</p>
+                    
+                    <div class="example-box">
+                        <div class="json-structure">
+{
+  "id": "adv001",
+  "name": "advanced-hover-card",
+  "settings": {
+    "_position": "relative",
+    "_overflow": "hidden",
+    "_border": {
+      "radius": {
+        "top": "var(--radius-lg)",
+        "right": "var(--radius-lg)",
+        "bottom": "var(--radius-lg)",
+        "left": "var(--radius-lg)"
+      }
+    },
+    "_cssCustom": ".advanced-hover-card {\n  transition: transform 0.3s ease, box-shadow 0.3s ease;\n  cursor: pointer;\n}\n\n.advanced-hover-card::before {\n  content: '';\n  position: absolute;\n  top: 0;\n  left: -100%;\n  width: 100%;\n  height: 100%;\n  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);\n  transition: left 0.5s;\n}\n\n.advanced-hover-card:hover {\n  transform: translateY(-4px);\n  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);\n}\n\n.advanced-hover-card:hover::before {\n  left: 100%;\n}"
+  },
+  "modified": 1703981100,
+  "user_id": 1,
+  "_exists": false
+}
+                        </div>
+                    </div>
+
+                    <div class="danger-box">
+                        <strong>⚠️ Custom CSS Warnings:</strong><br>
+                        • Escape newlines properly in JSON (\n)<br>
+                        • Test CSS syntax before adding<br>
+                        • Avoid !important declarations<br>
+                        • Use CSS variables for consistency<br>
+                        • Consider performance impact of complex animations
+                    </div>
+                </div>
+
+                <div id="builder" class="tab-content">
+                    <h3>Interactive Class Builder</h3>
+                    <p>Build your own CSS class object step by step:</p>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin: 2rem 0;">
+                        <div>
+                            <h4>Class Details</h4>
+                            <div style="margin: 1rem 0;">
+                                <label>Class Name:</label><br>
+                                <input type="text" id="className" placeholder="my-custom-class" style="width: 100%; padding: 0.5rem; margin-top: 0.25rem;">
+                            </div>
+                            <div style="margin: 1rem 0;">
+                                <label>Display Type:</label><br>
+                                <select id="displayType" style="width: 100%; padding: 0.5rem; margin-top: 0.25rem;">
+                                    <option value="">Select display type</option>
+                                    <option value="block">block</option>
+                                    <option value="flex">flex</option>
+                                    <option value="grid">grid</option>
+                                    <option value="inline-block">inline-block</option>
+                                </select>
+                            </div>
+                            <div style="margin: 1rem 0;">
+                                <label>Background Color:</label><br>
+                                <input type="text" id="bgColor" placeholder="var(--primary)" style="width: 100%; padding: 0.5rem; margin-top: 0.25rem;">
+                            </div>
+                            <div style="margin: 1rem 0;">
+                                <label>Padding:</label><br>
+                                <input type="text" id="paddingValue" placeholder="var(--space-m)" style="width: 100%; padding: 0.5rem; margin-top: 0.25rem;">
+                            </div>
+                            <button onclick="generateClass()" style="background: var(--primary); color: white; padding: 0.75rem 1.5rem; border: none; border-radius: var(--radius); cursor: pointer; font-size: 1rem;">Generate Class</button>
+                        </div>
+                        <div>
+                            <h4>Generated JSON</h4>
+                            <textarea id="generatedJson" readonly style="width: 100%; height: 300px; font-family: monospace; font-size: 0.9rem; padding: 1rem; border: 1px solid var(--border); border-radius: var(--radius);"></textarea>
+                            <button onclick="copyToClipboard()" style="background: var(--success); color: white; padding: 0.5rem 1rem; border: none; border-radius: var(--radius); cursor: pointer; margin-top: 0.5rem;">Copy JSON</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header" onclick="toggleSection(this)">
+                <span>⚠️ Common Gotchas & Troubleshooting</span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="danger-box">
+                    <h4>🔥 Critical Mistakes to Avoid</h4>
+                    <ul style="margin: 1rem 0; padding-left: 2rem;">
+                        <li><strong>Duplicate IDs:</strong> Each ID must be unique across the entire JSON</li>
+                        <li><strong>Invalid JSON:</strong> Escaping issues in _cssCustom properties</li>
+                        <li><strong>Missing _exists:</strong> Always include "_exists": false</li>
+                        <li><strong>Wrong nested structure:</strong> Padding/margin must be objects with top/right/bottom/left</li>
+                        <li><strong>Responsive syntax:</strong> Use colons, not dots: "_property:mobile_landscape"</li>
+                    </ul>
+                </div>
+
+                <div class="warning-box">
+                    <h4>🐛 Common Issues & Solutions</h4>
+                    <div style="margin: 1rem 0;">
+                        <strong>Issue:</strong> CSS not applying in Bricks<br>
+                        <strong>Solution:</strong> Check class name matches exactly, verify CSS variable availability
+                    </div>
+                    <div style="margin: 1rem 0;">
+                        <strong>Issue:</strong> Responsive styles not working<br>
+                        <strong>Solution:</strong> Ensure breakpoint syntax is correct, test inheritance
+                    </div>
+                    <div style="margin: 1rem 0;">
+                        <strong>Issue:</strong> JSON validation errors<br>
+                        <strong>Solution:</strong> Validate JSON structure, check for trailing commas, escape quotes in _cssCustom
+                    </div>
+                </div>
+
+                <h3>ID Generation Best Practices</h3>
+                <div class="example-box">
+                    <div class="json-structure">
+// ✅ Good ID patterns
+"btn001", "card01", "nav123", "hero99"
+
+// ❌ Avoid these patterns  
+"button-1" (hyphens), "CARD01" (uppercase), "btn_01" (underscores)
+
+// 💡 Pro tip: Use a prefix system
+"btn" + random3digits for buttons
+"lay" + random3digits for layouts  
+"txt" + random3digits for typography
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header" onclick="toggleSection(this)">
                 <span>📋 Best Practices & Guidelines</span>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -641,6 +938,97 @@
             
             // Add active class to clicked tab
             event.target.classList.add('active');
+        }
+
+        function showExampleTab(tabName) {
+            // Hide all example tab contents
+            document.querySelectorAll('#simple, #complex, #responsive, #custom, #builder').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all example tabs
+            document.querySelectorAll('.section .tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+
+        function generateRandomId() {
+            const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+            let result = '';
+            for (let i = 0; i < 6; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
+        }
+
+        function generateClass() {
+            const className = document.getElementById('className').value || 'my-custom-class';
+            const displayType = document.getElementById('displayType').value;
+            const bgColor = document.getElementById('bgColor').value;
+            const paddingValue = document.getElementById('paddingValue').value;
+            
+            const classObject = {
+                "id": generateRandomId(),
+                "name": className,
+                "settings": {},
+                "modified": Math.floor(Date.now() / 1000),
+                "user_id": 1,
+                "_exists": false
+            };
+
+            // Add display if specified
+            if (displayType) {
+                classObject.settings._display = displayType;
+            }
+
+            // Add background if specified
+            if (bgColor) {
+                classObject.settings._background = {
+                    "color": {
+                        "raw": bgColor
+                    }
+                };
+            }
+
+            // Add padding if specified
+            if (paddingValue) {
+                classObject.settings._padding = {
+                    "top": paddingValue,
+                    "right": paddingValue,
+                    "bottom": paddingValue,
+                    "left": paddingValue
+                };
+            }
+
+            // If no settings were added, make it an empty array
+            if (Object.keys(classObject.settings).length === 0) {
+                classObject.settings = [];
+            }
+
+            document.getElementById('generatedJson').value = JSON.stringify(classObject, null, 2);
+        }
+
+        function copyToClipboard() {
+            const textarea = document.getElementById('generatedJson');
+            textarea.select();
+            document.execCommand('copy');
+            
+            // Show feedback
+            const button = event.target;
+            const originalText = button.textContent;
+            button.textContent = 'Copied!';
+            button.style.background = 'var(--success)';
+            
+            setTimeout(() => {
+                button.textContent = originalText;
+                button.style.background = 'var(--success)';
+            }, 2000);
         }
 
         async function loadBricksData() {
