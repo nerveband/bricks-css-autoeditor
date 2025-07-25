@@ -565,9 +565,10 @@
                 <p>Import regular CSS files and convert them to Bricks JSON format. Upload a CSS file or paste CSS code directly.</p>
                 
                 <div class="tabs">
-                    <button class="tab active" onclick="showImportTab('upload')">File Upload</button>
+                    <button class="tab active" onclick="showImportTab('upload')">CSS Upload</button>
                     <button class="tab" onclick="showImportTab('paste')">Paste CSS</button>
-                    <button class="tab" onclick="showImportTab('sample')">Sample CSS</button>
+                    <button class="tab" onclick="showImportTab('json-import')">Import JSON</button>
+                    <button class="tab" onclick="showImportTab('sample')">Sample & Preview</button>
                 </div>
 
                 <div id="upload" class="tab-content active">
@@ -615,11 +616,61 @@
                     </div>
                 </div>
 
+                <div id="json-import" class="tab-content">
+                    <h3>Import Bricks JSON File</h3>
+                    <p>Import an existing Bricks CSS classes JSON file for editing and export:</p>
+                    
+                    <div style="margin: 1rem 0;">
+                        <input type="file" id="jsonFileInput" accept=".json" style="margin-bottom: 1rem;">
+                        <div id="jsonValidation" style="padding: 1rem; border-radius: var(--radius); margin-bottom: 1rem; display: none;"></div>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                        <div>
+                            <h4>JSON Preview & Validation</h4>
+                            <div id="jsonStats" style="background: var(--bg-tertiary); padding: 1rem; border-radius: var(--radius); margin-bottom: 1rem;">
+                                <div>Total Classes: <span id="totalClasses">0</span></div>
+                                <div>With Settings: <span id="withSettings">0</span></div>
+                                <div>Empty Classes: <span id="emptyClasses">0</span></div>
+                                <div>Modified Classes: <span id="modifiedClasses">0</span></div>
+                            </div>
+                            <textarea id="jsonPreview" readonly style="width: 100%; height: 200px; font-family: monospace; font-size: 0.8rem; padding: 1rem; border: 1px solid var(--border); border-radius: var(--radius);"></textarea>
+                        </div>
+                        <div>
+                            <h4>Export Options</h4>
+                            <div style="margin: 1rem 0;">
+                                <label><input type="checkbox" id="exportModified" checked> Only export modified classes</label>
+                            </div>
+                            <div style="margin: 1rem 0;">
+                                <label><input type="checkbox" id="exportWithSettings" checked> Only export classes with settings</label>
+                            </div>
+                            <div style="margin: 1rem 0;">
+                                <label><input type="checkbox" id="addTimestamp"> Update timestamps on export</label>
+                            </div>
+                            <div style="margin: 1rem 0;">
+                                <button onclick="exportFilteredJSON()" style="background: var(--success); color: white; padding: 0.75rem 1.5rem; border: none; border-radius: var(--radius); cursor: pointer; margin-right: 1rem;">Export Filtered</button>
+                                <button onclick="exportFullJSON()" style="background: var(--primary); color: white; padding: 0.75rem 1.5rem; border: none; border-radius: var(--radius); cursor: pointer;">Export All</button>
+                            </div>
+                            <div style="margin: 1rem 0;">
+                                <button onclick="validateJSONStructure()" style="background: var(--warning); color: white; padding: 0.75rem 1.5rem; border: none; border-radius: var(--radius); cursor: pointer;">Validate Structure</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div id="sample" class="tab-content">
-                    <h3>Sample CSS File</h3>
-                    <p>Download our sample CSS file to see the expected format and test the import tool:</p>
-                    <div class="example-box">
-                        <div class="json-structure">
+                    <h3>Sample CSS File & Live Preview</h3>
+                    <p>Download our sample CSS file or preview it directly in the browser:</p>
+                    
+                    <div class="tabs" style="margin: 1rem 0;">
+                        <button class="tab active" onclick="showSampleTab('info')">Info</button>
+                        <button class="tab" onclick="showSampleTab('preview')">Live Preview</button>
+                        <button class="tab" onclick="showSampleTab('source')">CSS Source</button>
+                    </div>
+
+                    <div id="info" class="tab-content active">
+                        <div class="example-box">
+                            <div class="json-structure">
 /* Sample CSS includes:
 • Button components (primary, secondary, large)
 • Card layouts with hover effects  
@@ -630,10 +681,26 @@
 • Responsive breakpoints
 • Advanced components (glassmorphism, animations)
 */
+                            </div>
                         </div>
+                        <button onclick="downloadSampleCSS()" style="background: var(--secondary); color: white; padding: 0.75rem 1.5rem; border: none; border-radius: var(--radius); cursor: pointer; margin-right: 1rem;">Download Sample CSS</button>
+                        <button onclick="loadSampleCSS()" style="background: var(--primary); color: white; padding: 0.75rem 1.5rem; border: none; border-radius: var(--radius); cursor: pointer;">Load Sample & Convert</button>
                     </div>
-                    <button onclick="downloadSampleCSS()" style="background: var(--secondary); color: white; padding: 0.75rem 1.5rem; border: none; border-radius: var(--radius); cursor: pointer; margin-right: 1rem;">Download Sample CSS</button>
-                    <button onclick="loadSampleCSS()" style="background: var(--primary); color: white; padding: 0.75rem 1.5rem; border: none; border-radius: var(--radius); cursor: pointer;">Load Sample & Convert</button>
+
+                    <div id="preview" class="tab-content">
+                        <h4>Live CSS Preview</h4>
+                        <p>See how the sample CSS components look when rendered:</p>
+                        <div id="cssPreviewContainer" style="border: 1px solid var(--border); border-radius: var(--radius); padding: 2rem; background: white; margin: 1rem 0; min-height: 400px;">
+                            <div class="loading-message">Click "Load Preview" to see the CSS components in action</div>
+                        </div>
+                        <button onclick="loadCSSPreview()" style="background: var(--primary); color: white; padding: 0.75rem 1.5rem; border: none; border-radius: var(--radius); cursor: pointer;">Load Preview</button>
+                    </div>
+
+                    <div id="source" class="tab-content">
+                        <h4>CSS Source Code</h4>
+                        <textarea id="sampleCSSSource" readonly style="width: 100%; height: 400px; font-family: monospace; font-size: 0.9rem; padding: 1rem; border: 1px solid var(--border); border-radius: var(--radius);"></textarea>
+                        <button onclick="loadSampleCSSSource()" style="background: var(--secondary); color: white; padding: 0.75rem 1.5rem; border: none; border-radius: var(--radius); cursor: pointer; margin-top: 1rem;">Load CSS Source</button>
+                    </div>
                 </div>
 
                 <div class="warning-box" style="margin-top: 2rem;">
@@ -1140,13 +1207,32 @@
 
         function showImportTab(tabName) {
             // Hide all import tab contents
-            document.querySelectorAll('#upload, #paste, #sample').forEach(content => {
+            document.querySelectorAll('#upload, #paste, #json-import, #sample').forEach(content => {
                 content.classList.remove('active');
             });
             
             // Remove active class from all import tabs  
             const importSection = document.querySelector('.section:nth-of-type(6)');
             importSection.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+
+        function showSampleTab(tabName) {
+            // Hide all sample tab contents
+            document.querySelectorAll('#info, #preview, #source').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all sample tabs
+            const sampleSection = document.getElementById('sample');
+            sampleSection.querySelectorAll('.tab').forEach(tab => {
                 tab.classList.remove('active');
             });
             
@@ -1324,11 +1410,13 @@
             return Object.keys(settings).length > 0 ? settings : [];
         }
 
-        // File upload handler
+        let importedBricksData = [];
+
+        // File upload handlers
         document.addEventListener('DOMContentLoaded', function() {
-            const fileInput = document.getElementById('cssFileInput');
-            if (fileInput) {
-                fileInput.addEventListener('change', function(e) {
+            const cssFileInput = document.getElementById('cssFileInput');
+            if (cssFileInput) {
+                cssFileInput.addEventListener('change', function(e) {
                     const file = e.target.files[0];
                     if (file && file.type === 'text/css') {
                         const reader = new FileReader();
@@ -1339,7 +1427,242 @@
                     }
                 });
             }
+
+            const jsonFileInput = document.getElementById('jsonFileInput');
+            if (jsonFileInput) {
+                jsonFileInput.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file && file.type === 'application/json') {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            try {
+                                const jsonData = JSON.parse(e.target.result);
+                                if (validateBricksJSON(jsonData)) {
+                                    importedBricksData = jsonData;
+                                    updateJSONStats(jsonData);
+                                    document.getElementById('jsonPreview').value = JSON.stringify(jsonData.slice(0, 3), null, 2) + '\n// ... and ' + (jsonData.length - 3) + ' more classes';
+                                    showValidationMessage('✅ Valid Bricks JSON file loaded successfully!', 'success');
+                                } else {
+                                    showValidationMessage('❌ Invalid Bricks JSON format. Please check the file structure.', 'error');
+                                }
+                            } catch (error) {
+                                showValidationMessage('❌ Invalid JSON file: ' + error.message, 'error');
+                            }
+                        };
+                        reader.readAsText(file);
+                    } else {
+                        showValidationMessage('❌ Please select a JSON file.', 'error');
+                    }
+                });
+            }
         });
+
+        function validateBricksJSON(data) {
+            // Check if it's an array
+            if (!Array.isArray(data)) {
+                return false;
+            }
+
+            // Check if array is not empty
+            if (data.length === 0) {
+                return false;
+            }
+
+            // Validate first few objects to ensure they match Bricks format
+            const sampleSize = Math.min(5, data.length);
+            for (let i = 0; i < sampleSize; i++) {
+                const obj = data[i];
+                
+                // Check required fields
+                if (!obj.hasOwnProperty('id') || 
+                    !obj.hasOwnProperty('name') || 
+                    !obj.hasOwnProperty('settings') || 
+                    !obj.hasOwnProperty('_exists')) {
+                    return false;
+                }
+
+                // Check field types
+                if (typeof obj.id !== 'string' || 
+                    typeof obj.name !== 'string' || 
+                    typeof obj._exists !== 'boolean') {
+                    return false;
+                }
+
+                // Settings should be object or array
+                if (typeof obj.settings !== 'object') {
+                    return false;
+                }
+
+                // ID should be 6 characters
+                if (obj.id.length !== 6) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        function showValidationMessage(message, type) {
+            const validationDiv = document.getElementById('jsonValidation');
+            validationDiv.style.display = 'block';
+            validationDiv.textContent = message;
+            
+            if (type === 'success') {
+                validationDiv.style.background = '#d1fae5';
+                validationDiv.style.color = '#065f46';
+                validationDiv.style.border = '1px solid #a7f3d0';
+            } else {
+                validationDiv.style.background = '#fee2e2';
+                validationDiv.style.color = '#991b1b';
+                validationDiv.style.border = '1px solid #fecaca';
+            }
+
+            // Hide after 5 seconds
+            setTimeout(() => {
+                validationDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        function updateJSONStats(data) {
+            const totalClasses = data.length;
+            const withSettings = data.filter(obj => 
+                typeof obj.settings === 'object' && 
+                !Array.isArray(obj.settings) && 
+                Object.keys(obj.settings).length > 0
+            ).length;
+            const emptyClasses = data.filter(obj => 
+                Array.isArray(obj.settings) || 
+                (typeof obj.settings === 'object' && Object.keys(obj.settings).length === 0)
+            ).length;
+            const modifiedClasses = data.filter(obj => obj.hasOwnProperty('modified')).length;
+
+            document.getElementById('totalClasses').textContent = totalClasses;
+            document.getElementById('withSettings').textContent = withSettings;
+            document.getElementById('emptyClasses').textContent = emptyClasses;
+            document.getElementById('modifiedClasses').textContent = modifiedClasses;
+        }
+
+        function validateJSONStructure() {
+            if (importedBricksData.length === 0) {
+                alert('Please import a JSON file first.');
+                return;
+            }
+
+            const issues = [];
+            const duplicateIds = new Set();
+            const seenIds = new Set();
+
+            importedBricksData.forEach((obj, index) => {
+                // Check for duplicate IDs
+                if (seenIds.has(obj.id)) {
+                    duplicateIds.add(obj.id);
+                    issues.push(`Duplicate ID "${obj.id}" found at index ${index}`);
+                } else {
+                    seenIds.add(obj.id);
+                }
+
+                // Check required fields
+                if (!obj.id || !obj.name || obj._exists === undefined) {
+                    issues.push(`Missing required fields at index ${index} (id: ${obj.id})`);
+                }
+
+                // Check settings structure
+                if (typeof obj.settings === 'object' && !Array.isArray(obj.settings)) {
+                    Object.keys(obj.settings).forEach(key => {
+                        if (!key.startsWith('_')) {
+                            issues.push(`Invalid settings key "${key}" at index ${index} (should start with _)`);
+                        }
+                    });
+                }
+            });
+
+            if (issues.length === 0) {
+                showValidationMessage('✅ JSON structure is valid! No issues found.', 'success');
+            } else {
+                const message = `❌ Found ${issues.length} issues:\n${issues.slice(0, 5).join('\n')}${issues.length > 5 ? '\n... and ' + (issues.length - 5) + ' more' : ''}`;
+                showValidationMessage(message, 'error');
+            }
+        }
+
+        function exportFilteredJSON() {
+            if (importedBricksData.length === 0) {
+                alert('Please import a JSON file first.');
+                return;
+            }
+
+            let filtered = importedBricksData;
+
+            // Apply filters
+            if (document.getElementById('exportModified').checked) {
+                filtered = filtered.filter(obj => obj.hasOwnProperty('modified'));
+            }
+
+            if (document.getElementById('exportWithSettings').checked) {
+                filtered = filtered.filter(obj => 
+                    typeof obj.settings === 'object' && 
+                    !Array.isArray(obj.settings) && 
+                    Object.keys(obj.settings).length > 0
+                );
+            }
+
+            // Update timestamps if requested
+            if (document.getElementById('addTimestamp').checked) {
+                const timestamp = Math.floor(Date.now() / 1000);
+                filtered = filtered.map(obj => ({
+                    ...obj,
+                    modified: timestamp,
+                    user_id: obj.user_id || 1
+                }));
+            }
+
+            if (filtered.length === 0) {
+                alert('No classes match the selected filters.');
+                return;
+            }
+
+            // Download filtered data
+            const dataStr = JSON.stringify(filtered, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `filtered-bricks-classes-${filtered.length}-items.json`;
+            link.click();
+            URL.revokeObjectURL(url);
+
+            alert(`Exported ${filtered.length} classes with applied filters.`);
+        }
+
+        function exportFullJSON() {
+            if (importedBricksData.length === 0) {
+                alert('Please import a JSON file first.');
+                return;
+            }
+
+            let exportData = importedBricksData;
+
+            // Update timestamps if requested
+            if (document.getElementById('addTimestamp').checked) {
+                const timestamp = Math.floor(Date.now() / 1000);
+                exportData = exportData.map(obj => ({
+                    ...obj,
+                    modified: timestamp,
+                    user_id: obj.user_id || 1
+                }));
+            }
+
+            // Download full data
+            const dataStr = JSON.stringify(exportData, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `bricks-classes-full-${exportData.length}-items.json`;
+            link.click();
+            URL.revokeObjectURL(url);
+
+            alert(`Exported all ${exportData.length} classes.`);
+        }
 
         function convertCSS() {
             const cssText = document.getElementById('cssPreview').value;
@@ -1438,14 +1761,19 @@
                 return;
             }
             
-            if (bricksData.length === 0) {
+            let baseData = bricksData;
+            if (importedBricksData.length > 0) {
+                baseData = importedBricksData;
+            }
+            
+            if (baseData.length === 0) {
                 alert('No existing Bricks data loaded. The converted classes will be used as the base.');
                 downloadJSON();
                 return;
             }
             
             // Create merged array
-            const merged = [...bricksData, ...convertedClasses];
+            const merged = [...baseData, ...convertedClasses];
             
             // Download merged file
             const dataStr = JSON.stringify(merged, null, 2);
@@ -1457,7 +1785,109 @@
             link.click();
             URL.revokeObjectURL(url);
             
-            alert(`Successfully merged ${convertedClasses.length} new classes with ${bricksData.length} existing classes.`);
+            alert(`Successfully merged ${convertedClasses.length} new classes with ${baseData.length} existing classes.`);
+        }
+
+        function loadCSSPreview() {
+            fetch('sample-styles.css')
+                .then(response => response.text())
+                .then(css => {
+                    // Create a dynamic style element
+                    const existingStyle = document.getElementById('preview-styles');
+                    if (existingStyle) {
+                        existingStyle.remove();
+                    }
+                    
+                    const style = document.createElement('style');
+                    style.id = 'preview-styles';
+                    style.textContent = css;
+                    document.head.appendChild(style);
+                    
+                    // Create preview HTML
+                    const previewHTML = `
+                        <div style="max-width: 1200px; margin: 0 auto; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+                            <h2>Button Components</h2>
+                            <div style="margin: 2rem 0; display: flex; gap: 1rem; flex-wrap: wrap;">
+                                <a href="#" class="btn-primary">Primary Button</a>
+                                <a href="#" class="btn-secondary">Secondary Button</a>
+                                <a href="#" class="btn-primary btn-large">Large Primary</a>
+                            </div>
+                            
+                            <h2>Card Components</h2>
+                            <div class="grid-3-col" style="margin: 2rem 0;">
+                                <div class="card">
+                                    <h3>Basic Card</h3>
+                                    <p>This is a basic card component with standard styling.</p>
+                                </div>
+                                <div class="card-hover">
+                                    <h3>Hover Card</h3>
+                                    <p>This card has hover effects. Try hovering over it to see the animation.</p>
+                                </div>
+                                <div class="feature-card">
+                                    <h3>Feature Card</h3>
+                                    <p>An advanced card with gradient top border and hover effects.</p>
+                                </div>
+                            </div>
+                            
+                            <h2>Typography</h2>
+                            <div style="margin: 2rem 0;">
+                                <h1 class="heading-hero">Hero Heading</h1>
+                                <h2 class="heading-section">Section Heading</h2>
+                                <p class="text-lead">This is lead text that introduces important content with larger, more prominent styling.</p>
+                                <p class="text-accent">Accent Text</p>
+                            </div>
+                            
+                            <h2>Layout Grids</h2>
+                            <div class="grid-auto" style="margin: 2rem 0;">
+                                <div class="card">Grid Item 1</div>
+                                <div class="card">Grid Item 2</div>
+                                <div class="card">Grid Item 3</div>
+                                <div class="card">Grid Item 4</div>
+                            </div>
+                            
+                            <h2>Flexbox Utilities</h2>
+                            <div style="margin: 2rem 0;">
+                                <div class="flex-between" style="background: #f3f4f6; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                                    <span>Left Content</span>
+                                    <span>Right Content</span>
+                                </div>
+                                <div class="flex-center" style="background: #f3f4f6; padding: 2rem; border-radius: 8px; margin-bottom: 1rem;">
+                                    <span>Centered Content</span>
+                                </div>
+                            </div>
+                            
+                            <h2>Advanced Components</h2>
+                            <div style="margin: 2rem 0;">
+                                <div class="glassmorphism" style="margin-bottom: 2rem;">
+                                    <h3>Glassmorphism Card</h3>
+                                    <p>This component uses backdrop-filter for a frosted glass effect.</p>
+                                </div>
+                                
+                                <div class="hero-banner">
+                                    <h1 class="heading-hero" style="color: white; margin-bottom: 1rem;">Hero Banner</h1>
+                                    <p style="font-size: 1.2rem; opacity: 0.9;">Beautiful gradient background with responsive padding</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    document.getElementById('cssPreviewContainer').innerHTML = previewHTML;
+                })
+                .catch(error => {
+                    document.getElementById('cssPreviewContainer').innerHTML = 
+                        '<div style="color: red; padding: 2rem;">Error loading CSS preview: ' + error.message + '</div>';
+                });
+        }
+
+        function loadSampleCSSSource() {
+            fetch('sample-styles.css')
+                .then(response => response.text())
+                .then(css => {
+                    document.getElementById('sampleCSSSource').value = css;
+                })
+                .catch(error => {
+                    document.getElementById('sampleCSSSource').value = 'Error loading CSS source: ' + error.message;
+                });
         }
 
         async function loadBricksData() {
