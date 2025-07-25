@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bricks CSS Classes Structure Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2563eb;
+            --primary-light: #3b82f6;
+            --secondary: #64748b;
+            --success: #059669;
+            --warning: #d97706;
+            --danger: #dc2626;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-tertiary: #f1f5f9;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --border: #e2e8f0;
+            --border-strong: #cbd5e1;
+            --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --radius: 8px;
+            --radius-lg: 12px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: var(--bg-secondary);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: var(--bg-primary);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: var(--bg-primary);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .section {
+            background: var(--bg-primary);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .section-header {
+            background: var(--primary);
+            color: white;
+            padding: 1.5rem;
+            font-size: 1.3rem;
+            font-weight: 600;
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-header:hover {
+            background: var(--primary-light);
+        }
+
+        .section-content {
+            padding: 2rem;
+            display: none;
+        }
+
+        .section.expanded .section-content {
+            display: block;
+        }
+
+        .section.expanded .toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        .toggle-icon {
+            transition: transform 0.3s ease;
+        }
+
+        .json-structure {
+            background: var(--bg-tertiary);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        .property-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .property-card {
+            background: var(--bg-tertiary);
+            border-radius: var(--radius);
+            padding: 1rem;
+            border-left: 4px solid var(--primary);
+        }
+
+        .property-name {
+            font-weight: 600;
+            color: var(--primary);
+            font-family: monospace;
+            margin-bottom: 0.5rem;
+        }
+
+        .property-description {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .example-box {
+            background: var(--bg-tertiary);
+            border-radius: var(--radius);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-left: 4px solid var(--success);
+        }
+
+        .warning-box {
+            background: #fef3cd;
+            border: 1px solid #f6cc54;
+            border-radius: var(--radius);
+            padding: 1rem;
+            margin: 1rem 0;
+            color: #92400e;
+        }
+
+        .danger-box {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: var(--radius);
+            padding: 1rem;
+            margin: 1rem 0;
+            color: #991b1b;
+        }
+
+        .tabs {
+            display: flex;
+            background: var(--bg-tertiary);
+            border-radius: var(--radius) var(--radius) 0 0;
+            margin-bottom: 0;
+        }
+
+        .tab {
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            border-bottom: 2px solid transparent;
+        }
+
+        .tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+            background: var(--bg-primary);
+        }
+
+        .tab-content {
+            display: none;
+            padding: 2rem;
+            background: var(--bg-primary);
+            border-radius: 0 0 var(--radius) var(--radius);
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgb(37 99 235 / 0.1);
+        }
+
+        .object-viewer {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+        }
+
+        .object-item {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+        }
+
+        .object-item:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .object-item:last-child {
+            border-bottom: none;
+        }
+
+        .object-id {
+            font-family: monospace;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .object-name {
+            font-family: monospace;
+            color: var(--text-primary);
+            margin: 0.25rem 0;
+        }
+
+        .object-meta {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .highlight {
+            background: yellow;
+            padding: 0 2px;
+        }
+
+        .responsive-indicator {
+            display: inline-block;
+            background: var(--warning);
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 3px;
+            margin-left: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .property-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .tabs {
+                flex-wrap: wrap;
+            }
+            
+            .tab {
+                flex: 1;
+                min-width: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Bricks CSS Classes Structure Guide</h1>
+            <p>A comprehensive visual guide to understanding and working with the Bricks Builder CSS classes JSON structure</p>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number" id="totalObjects">2,360</div>
+                <div class="stat-label">Total CSS Classes</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="withSettings">~51%</div>
+                <div class="stat-label">Classes with Settings</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">53</div>
+                <div class="stat-label">Unique Settings Properties</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">509.4KB</div>
+                <div class="stat-label">File Size</div>
+            </div>
+        </div>
+
+        <div class="section expanded">
+            <div class="section-header" onclick="toggleSection(this)">
+                <span>📋 Object Structure Overview</span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <p>Each CSS class object in the JSON array follows this structure:</p>
+                
+                <div class="json-structure">
+{
+  "id": "jcv30u",                    // ✅ Required: Unique 6-char identifier
+  "name": "ui-typography-section",   // ✅ Required: CSS class name
+  "settings": { ... } or [],         // ✅ Required: Configuration object or empty array
+  "_exists": false,                  // ✅ Required: Always false
+  
+  // Optional fields:
+  "modified": 1731705127,           // 🔄 Optional: Unix timestamp
+  "user_id": 1,                     // 🔄 Optional: User identifier
+  "_mappedId": "acss_import_..."     // 🔄 Optional: Import mapping ID
+}
+                </div>
+
+                <div class="danger-box">
+                    <strong>⚠️ Critical Fields:</strong> Never modify <code>id</code>, <code>name</code>, <code>_exists</code>, or <code>_mappedId</code> values. These maintain system integrity.
+                </div>
+
+                <div class="warning-box">
+                    <strong>🔄 Modifiable Fields:</strong> You can safely modify all <code>settings</code> properties, <code>modified</code> timestamps, and <code>user_id</code> values.
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header" onclick="toggleSection(this)">
+                <span>⚙️ Settings Properties</span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="tabs">
+                    <button class="tab active" onclick="showTab('layout')">Layout & Display</button>
+                    <button class="tab" onclick="showTab('spacing')">Spacing</button>
+                    <button class="tab" onclick="showTab('visual')">Visual</button>
+                    <button class="tab" onclick="showTab('responsive')">Responsive</button>
+                </div>
+
+                <div id="layout" class="tab-content active">
+                    <h3>Layout & Display Properties</h3>
+                    <div class="property-grid">
+                        <div class="property-card">
+                            <div class="property-name">_display</div>
+                            <div class="property-description">CSS display property (grid, flex, block, etc.)</div>
+                        </div>
+                        <div class="property-card">
+                            <div class="property-name">_direction</div>
+                            <div class="property-description">Flex direction (row, column, etc.)</div>
+                        </div>
+                        <div class="property-card">
+                            <div class="property-name">_alignItems</div>
+                            <div class="property-description">Flex align-items property</div>
+                        </div>
+                        <div class="property-card">
+                            <div class="property-name">_justifyContent</div>
+                            <div class="property-description">Flex justify-content property</div>
+                        </div>
+                        <div class="property-card">
+                            <div class="property-name">_gridTemplateColumns</div>
+                            <div class="property-description">CSS Grid template columns</div>
+                        </div>
+                        <div class="property-card">
+                            <div class="property-name">_gridTemplateRows</div>
+                            <div class="property-description">CSS Grid template rows</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="spacing" class="tab-content">
+                    <h3>Spacing Properties</h3>
+                    <div class="property-grid">
+                        <div class="property-card">
+                            <div class="property-name">_padding</div>
+                            <div class="property-description">Padding object with top, right, bottom, left properties</div>
+                        </div>
+                        <div class="property-card">
+                            <div class="property-name">_margin</div>
+                            <div class="property-description">Margin object with top, right, bottom, left properties</div>
+                        </div>
+                        <div class="property-card">
+                            <div class="property-name">_rowGap</div>
+                            <div class="property-description">CSS gap property for rows</div>
+                        </div>
+                        <div class="property-card">
+                            <div class="property-name">_columnGap</div>
+                            <div class="property-description">CSS gap property for columns</div>
+                        </div>
+                        <div class="property-card">
+                            <div class="property-name">_gridGap</div>
+                            <div class="property-description">CSS Grid gap property</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="visual" class="tab-content">
+                    <h3>Visual Properties</h3>
+                    <div class="property-grid">
+                        <div class="property-card">
+                            <div class="property-name">_typography</div>
+                            <div class="property-description">Text styling object (font-size, color, weight, etc.)</div>
+                        </div>
+                        <div class="property-card">
+                            <div class="property-name">_background</div>
+                            <div class="property-description">Background properties (color, image, etc.)</div>
+                        </div>
+                        <div class="property-card">
+                            <div class="property-name">_border</div>
+                            <div class="property-description">Border properties including radius</div>
+                        </div>
+                        <div class="property-card">
+                            <div class="property-name">_gradient</div>
+                            <div class="property-description">Gradient properties (angle, colors)</div>
+                        </div>
+                        <div class="property-card">
+                            <div class="property-name">_cssCustom</div>
+                            <div class="property-description">Raw CSS strings for custom styling</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="responsive" class="tab-content">
+                    <h3>Responsive Variants</h3>
+                    <p>Many properties support responsive breakpoint suffixes:</p>
+                    <div class="property-grid">
+                        <div class="property-card">
+                            <div class="property-name">:mobile_landscape</div>
+                            <div class="property-description">Mobile landscape breakpoint variant</div>
+                        </div>
+                        <div class="property-card">
+                            <div class="property-name">:mobile_portrait</div>
+                            <div class="property-description">Mobile portrait breakpoint variant</div>
+                        </div>
+                        <div class="property-card">
+                            <div class="property-name">:tablet_portrait</div>
+                            <div class="property-description">Tablet portrait breakpoint variant</div>
+                        </div>
+                    </div>
+                    
+                    <div class="example-box">
+                        <strong>Example:</strong><br>
+                        <code>_gridTemplateColumns</code> → Default value<br>
+                        <code>_gridTemplateColumns:mobile_landscape</code> → Mobile landscape override
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header" onclick="toggleSection(this)">
+                <span>🧬 Nested Structures</span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <h3>Complex Property Objects</h3>
+                
+                <div class="example-box">
+                    <h4>Typography Object (_typography)</h4>
+                    <div class="json-structure">
+"_typography": {
+  "line-height": "1.1",
+  "text-transform": "uppercase",
+  "letter-spacing": ".095em",
+  "font-size": "var(--text-s)",
+  "font-weight": "400",
+  "text-align": "center",
+  "color": {
+    "raw": "var(--text-dark)"
+  }
+}
+                    </div>
+                </div>
+
+                <div class="example-box">
+                    <h4>Padding/Margin Object</h4>
+                    <div class="json-structure">
+"_padding": {
+  "top": "var(--space-m)",
+  "right": "var(--space-m)",
+  "bottom": "var(--space-m)",
+  "left": "var(--space-m)"
+}
+                    </div>
+                </div>
+
+                <div class="example-box">
+                    <h4>Border Object (_border)</h4>
+                    <div class="json-structure">
+"_border": {
+  "radius": {
+    "top": "var(--radius)",
+    "right": "var(--radius)",
+    "bottom": "var(--radius)",
+    "left": "var(--radius)"
+  }
+}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header" onclick="toggleSection(this)">
+                <span>🔍 Object Explorer</span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <input type="text" class="search-box" id="searchInput" placeholder="Search by class name, ID, or property..." oninput="filterObjects()">
+                <div class="object-viewer" id="objectViewer">
+                    <div class="object-item">Loading objects...</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header" onclick="toggleSection(this)">
+                <span>📋 Best Practices & Guidelines</span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <h3>What You Can Safely Modify:</h3>
+                <ul style="margin: 1rem 0; padding-left: 2rem;">
+                    <li>✅ All properties within <code>settings</code> objects</li>
+                    <li>✅ <code>modified</code> timestamp values</li>
+                    <li>✅ <code>user_id</code> values</li>
+                    <li>✅ Add new properties to <code>settings</code> objects</li>
+                    <li>✅ Change <code>settings</code> from <code>[]</code> to <code>{}</code> and vice versa</li>
+                </ul>
+
+                <h3>What Must Never Be Changed:</h3>
+                <ul style="margin: 1rem 0; padding-left: 2rem;">
+                    <li>❌ <code>id</code> values (unique identifiers)</li>
+                    <li>❌ <code>name</code> values (CSS class names)</li>
+                    <li>❌ <code>_exists</code> values (always false)</li>
+                    <li>❌ <code>_mappedId</code> values (when present)</li>
+                    <li>❌ Overall JSON array structure</li>
+                </ul>
+
+                <h3>Common Value Patterns:</h3>
+                <div class="property-grid">
+                    <div class="property-card">
+                        <div class="property-name">CSS Variables</div>
+                        <div class="property-description">var(--container-gap), var(--space-m), var(--primary)</div>
+                    </div>
+                    <div class="property-card">
+                        <div class="property-name">Calculated Values</div>
+                        <div class="property-description">calc(var(--content-gap) / 2)</div>
+                    </div>
+                    <div class="property-card">
+                        <div class="property-name">Raw CSS</div>
+                        <div class="property-description">Complex CSS rules in _cssCustom properties</div>
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <strong>💡 Pro Tip:</strong> When adding new CSS classes, follow the existing naming conventions and use CSS variables for consistency with the Bricks Builder system.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let bricksData = [];
+        let filteredData = [];
+
+        function toggleSection(header) {
+            const section = header.parentElement;
+            section.classList.toggle('expanded');
+        }
+
+        function showTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+
+        async function loadBricksData() {
+            try {
+                const response = await fetch('bricks-css-classes.json');
+                bricksData = await response.json();
+                filteredData = bricksData;
+                displayObjects(filteredData.slice(0, 50)); // Show first 50 items
+                updateStats();
+            } catch (error) {
+                document.getElementById('objectViewer').innerHTML = 
+                    '<div class="object-item" style="color: var(--danger);">Error loading data: ' + error.message + '</div>';
+            }
+        }
+
+        function updateStats() {
+            const withSettings = bricksData.filter(obj => 
+                typeof obj.settings === 'object' && !Array.isArray(obj.settings) && Object.keys(obj.settings).length > 0
+            ).length;
+            
+            document.getElementById('totalObjects').textContent = bricksData.length.toLocaleString();
+            document.getElementById('withSettings').textContent = `${Math.round((withSettings / bricksData.length) * 100)}%`;
+        }
+
+        function displayObjects(objects) {
+            const viewer = document.getElementById('objectViewer');
+            if (objects.length === 0) {
+                viewer.innerHTML = '<div class="object-item">No objects found matching your search.</div>';
+                return;
+            }
+            
+            viewer.innerHTML = objects.map(obj => {
+                const settingsCount = typeof obj.settings === 'object' && !Array.isArray(obj.settings) 
+                    ? Object.keys(obj.settings).length 
+                    : 0;
+                
+                const hasResponsive = typeof obj.settings === 'object' && !Array.isArray(obj.settings) && 
+                    Object.keys(obj.settings).some(key => key.includes(':'));
+                
+                return `
+                    <div class="object-item" onclick="showObjectDetails('${obj.id}')">
+                        <div class="object-id">${obj.id}</div>
+                        <div class="object-name">${obj.name}</div>
+                        <div class="object-meta">
+                            Settings: ${settingsCount} properties
+                            ${obj.modified ? `• Modified: ${new Date(obj.modified * 1000).toLocaleDateString()}` : ''}
+                            ${obj._mappedId ? `• Mapped ID: ${obj._mappedId}` : ''}
+                            ${hasResponsive ? '<span class="responsive-indicator">RESPONSIVE</span>' : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function filterObjects() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            if (!searchTerm) {
+                filteredData = bricksData;
+                displayObjects(filteredData.slice(0, 50));
+                return;
+            }
+            
+            filteredData = bricksData.filter(obj => {
+                // Search in name, id, and settings properties
+                const searchInSettings = typeof obj.settings === 'object' && !Array.isArray(obj.settings) 
+                    ? Object.keys(obj.settings).some(key => key.toLowerCase().includes(searchTerm))
+                    : false;
+                
+                return obj.name.toLowerCase().includes(searchTerm) ||
+                       obj.id.toLowerCase().includes(searchTerm) ||
+                       searchInSettings ||
+                       (obj._mappedId && obj._mappedId.toLowerCase().includes(searchTerm));
+            });
+            
+            displayObjects(filteredData.slice(0, 50));
+        }
+
+        function showObjectDetails(id) {
+            const obj = bricksData.find(item => item.id === id);
+            if (obj) {
+                const details = JSON.stringify(obj, null, 2);
+                const newWindow = window.open('', '_blank', 'width=800,height=600,scrollbars=yes');
+                newWindow.document.write(`
+                    <html>
+                        <head>
+                            <title>Object Details: ${obj.name}</title>
+                            <style>
+                                body { font-family: monospace; padding: 20px; background: #f8fafc; }
+                                pre { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+                                .header { background: #2563eb; color: white; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+                            </style>
+                        </head>
+                        <body>
+                            <div class="header">
+                                <h2>Object Details: ${obj.name}</h2>
+                                <p>ID: ${obj.id}</p>
+                            </div>
+                            <pre>${details}</pre>
+                        </body>
+                    </html>
+                `);
+            }
+        }
+
+        // Load data when page loads
+        window.addEventListener('load', loadBricksData);
+
+        // Expand first section by default
+        document.addEventListener('DOMContentLoaded', function() {
+            const firstSection = document.querySelector('.section');
+            if (firstSection && !firstSection.classList.contains('expanded')) {
+                firstSection.classList.add('expanded');
+            }
+        });
+    </script>
+</body>
+</html>
