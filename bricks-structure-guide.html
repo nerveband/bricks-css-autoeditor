@@ -332,20 +332,20 @@
 
         <div class="stats">
             <div class="stat-card">
-                <div class="stat-number" id="totalObjects">2,360</div>
+                <div class="stat-number" id="totalObjects">-</div>
                 <div class="stat-label">Total CSS Classes</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number" id="withSettings">~51%</div>
+                <div class="stat-number" id="withSettings">-</div>
                 <div class="stat-label">Classes with Settings</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number">53</div>
-                <div class="stat-label">Unique Settings Properties</div>
+                <div class="stat-number">53+</div>
+                <div class="stat-label">Available Settings Properties</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number">509.4KB</div>
-                <div class="stat-label">File Size</div>
+                <div class="stat-number" id="fileSize">-</div>
+                <div class="stat-label">JSON File Size</div>
             </div>
         </div>
 
@@ -733,9 +733,29 @@
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="section-content">
+                <div class="warning-box" style="margin-bottom: 1rem;">
+                    <strong>📁 Import Your JSON File:</strong> To explore your specific Bricks CSS classes, use the "Import JSON" tab in the CSS Import Tool section above. This explorer will then show your actual classes.
+                </div>
                 <input type="text" class="search-box" id="searchInput" placeholder="Search by class name, ID, or property..." oninput="filterObjects()">
                 <div class="object-viewer" id="objectViewer">
-                    <div class="object-item">Loading objects...</div>
+                    <div class="object-item">
+                        <div class="object-id">sample1</div>
+                        <div class="object-name">example-button-class</div>
+                        <div class="object-meta">Settings: 5 properties • Example class structure</div>
+                    </div>
+                    <div class="object-item">
+                        <div class="object-id">sample2</div>
+                        <div class="object-name">example-grid-layout</div>
+                        <div class="object-meta">Settings: 8 properties • Example responsive class</div>
+                    </div>
+                    <div class="object-item">
+                        <div class="object-id">sample3</div>
+                        <div class="object-name">example-typography</div>
+                        <div class="object-meta">Settings: 3 properties • Example text styling</div>
+                    </div>
+                    <div style="text-align: center; padding: 2rem; color: var(--text-secondary); font-style: italic;">
+                        Import your Bricks JSON file to see your actual CSS classes here
+                    </div>
                 </div>
             </div>
         </div>
@@ -1440,6 +1460,7 @@
                                 if (validateBricksJSON(jsonData)) {
                                     importedBricksData = jsonData;
                                     updateJSONStats(jsonData);
+                                    updateMainStats(); // Update main page stats
                                     document.getElementById('jsonPreview').value = JSON.stringify(jsonData.slice(0, 3), null, 2) + '\n// ... and ' + (jsonData.length - 3) + ' more classes';
                                     showValidationMessage('✅ Valid Bricks JSON file loaded successfully!', 'success');
                                 } else {
@@ -1891,25 +1912,52 @@
         }
 
         async function loadBricksData() {
+            // Try to load the original sample file, but don't require it
             try {
                 const response = await fetch('bricks-css-classes.json');
-                bricksData = await response.json();
-                filteredData = bricksData;
-                displayObjects(filteredData.slice(0, 50)); // Show first 50 items
-                updateStats();
+                if (response.ok) {
+                    const sampleData = await response.json();
+                    // Only use as fallback if no other data is loaded
+                    if (bricksData.length === 0 && importedBricksData.length === 0) {
+                        bricksData = sampleData;
+                        filteredData = bricksData;
+                        displayObjects(filteredData.slice(0, 50));
+                        updateMainStats();
+                    }
+                }
             } catch (error) {
-                document.getElementById('objectViewer').innerHTML = 
-                    '<div class="object-item" style="color: var(--danger);">Error loading data: ' + error.message + '</div>';
+                // Silently handle - not critical for generic tool
+                console.log('Sample data not available - tool will work with imported data');
             }
         }
 
-        function updateStats() {
-            const withSettings = bricksData.filter(obj => 
-                typeof obj.settings === 'object' && !Array.isArray(obj.settings) && Object.keys(obj.settings).length > 0
-            ).length;
+        function updateMainStats() {
+            let dataToAnalyze = bricksData;
             
-            document.getElementById('totalObjects').textContent = bricksData.length.toLocaleString();
-            document.getElementById('withSettings').textContent = `${Math.round((withSettings / bricksData.length) * 100)}%`;
+            // Use imported data if available
+            if (importedBricksData.length > 0) {
+                dataToAnalyze = importedBricksData;
+                filteredData = importedBricksData;
+                displayObjects(filteredData.slice(0, 50));
+            }
+            
+            if (dataToAnalyze.length > 0) {
+                const withSettings = dataToAnalyze.filter(obj => 
+                    typeof obj.settings === 'object' && !Array.isArray(obj.settings) && Object.keys(obj.settings).length > 0
+                ).length;
+                
+                document.getElementById('totalObjects').textContent = dataToAnalyze.length.toLocaleString();
+                document.getElementById('withSettings').textContent = `${Math.round((withSettings / dataToAnalyze.length) * 100)}%`;
+                
+                // Estimate file size
+                const jsonStr = JSON.stringify(dataToAnalyze);
+                const sizeKB = (jsonStr.length / 1024).toFixed(1);
+                document.getElementById('fileSize').textContent = `${sizeKB}KB`;
+            } else {
+                document.getElementById('totalObjects').textContent = '-';
+                document.getElementById('withSettings').textContent = '-';
+                document.getElementById('fileSize').textContent = '-';
+            }
         }
 
         function displayObjects(objects) {
@@ -1945,13 +1993,22 @@
         function filterObjects() {
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
             
+            // Use imported data if available, otherwise use sample data
+            let dataToSearch = importedBricksData.length > 0 ? importedBricksData : bricksData;
+            
             if (!searchTerm) {
-                filteredData = bricksData;
+                filteredData = dataToSearch;
                 displayObjects(filteredData.slice(0, 50));
                 return;
             }
             
-            filteredData = bricksData.filter(obj => {
+            if (dataToSearch.length === 0) {
+                document.getElementById('objectViewer').innerHTML = 
+                    '<div style="text-align: center; padding: 2rem; color: var(--text-secondary);">Import a Bricks JSON file to enable search functionality</div>';
+                return;
+            }
+            
+            filteredData = dataToSearch.filter(obj => {
                 // Search in name, id, and settings properties
                 const searchInSettings = typeof obj.settings === 'object' && !Array.isArray(obj.settings) 
                     ? Object.keys(obj.settings).some(key => key.toLowerCase().includes(searchTerm))
@@ -1967,7 +2024,10 @@
         }
 
         function showObjectDetails(id) {
-            const obj = bricksData.find(item => item.id === id);
+            // Use imported data if available, otherwise use sample data
+            let dataToSearch = importedBricksData.length > 0 ? importedBricksData : bricksData;
+            const obj = dataToSearch.find(item => item.id === id);
+            
             if (obj) {
                 const details = JSON.stringify(obj, null, 2);
                 const newWindow = window.open('', '_blank', 'width=800,height=600,scrollbars=yes');
