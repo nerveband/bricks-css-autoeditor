@@ -558,6 +558,110 @@
 
         <div class="section">
             <div class="section-header" onclick="toggleSection(this)">
+                <span>📥 CSS Import Tool</span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <p>Import regular CSS files and convert them to Bricks JSON format. Upload a CSS file or paste CSS code directly.</p>
+                
+                <div class="tabs">
+                    <button class="tab active" onclick="showImportTab('upload')">File Upload</button>
+                    <button class="tab" onclick="showImportTab('paste')">Paste CSS</button>
+                    <button class="tab" onclick="showImportTab('sample')">Sample CSS</button>
+                </div>
+
+                <div id="upload" class="tab-content active">
+                    <h3>Upload CSS File</h3>
+                    <input type="file" id="cssFileInput" accept=".css" style="margin-bottom: 1rem;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                        <div>
+                            <h4>CSS Preview</h4>
+                            <textarea id="cssPreview" readonly style="width: 100%; height: 300px; font-family: monospace; font-size: 0.9rem; padding: 1rem; border: 1px solid var(--border); border-radius: var(--radius);"></textarea>
+                        </div>
+                        <div>
+                            <h4>Generated JSON Classes</h4>
+                            <textarea id="jsonOutput" readonly style="width: 100%; height: 300px; font-family: monospace; font-size: 0.9rem; padding: 1rem; border: 1px solid var(--border); border-radius: var(--radius);"></textarea>
+                        </div>
+                    </div>
+                    <div style="margin-top: 1rem;">
+                        <button onclick="convertCSS()" style="background: var(--primary); color: white; padding: 0.75rem 1.5rem; border: none; border-radius: var(--radius); cursor: pointer; margin-right: 1rem;">Convert to JSON</button>
+                        <button onclick="downloadJSON()" style="background: var(--success); color: white; padding: 0.75rem 1.5rem; border: none; border-radius: var(--radius); cursor: pointer; margin-right: 1rem;">Download JSON</button>
+                        <button onclick="mergeWithExisting()" style="background: var(--warning); color: white; padding: 0.75rem 1.5rem; border: none; border-radius: var(--radius); cursor: pointer;">Merge with Existing</button>
+                    </div>
+                </div>
+
+                <div id="paste" class="tab-content">
+                    <h3>Paste CSS Code</h3>
+                    <textarea id="cssInput" placeholder="Paste your CSS code here..." style="width: 100%; height: 200px; font-family: monospace; font-size: 0.9rem; padding: 1rem; border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 1rem;"></textarea>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                        <div>
+                            <h4>Conversion Options</h4>
+                            <div style="margin: 1rem 0;">
+                                <label><input type="checkbox" id="includeHover" checked> Include :hover states</label>
+                            </div>
+                            <div style="margin: 1rem 0;">
+                                <label><input type="checkbox" id="includeMediaQueries" checked> Process media queries</label>
+                            </div>
+                            <div style="margin: 1rem 0;">
+                                <label><input type="checkbox" id="generateIds" checked> Auto-generate IDs</label>
+                            </div>
+                            <button onclick="convertPastedCSS()" style="background: var(--primary); color: white; padding: 0.75rem 1.5rem; border: none; border-radius: var(--radius); cursor: pointer;">Convert CSS</button>
+                        </div>
+                        <div>
+                            <h4>Generated JSON</h4>
+                            <textarea id="pastedJsonOutput" readonly style="width: 100%; height: 200px; font-family: monospace; font-size: 0.9rem; padding: 1rem; border: 1px solid var(--border); border-radius: var(--radius);"></textarea>
+                            <button onclick="copyPastedJSON()" style="background: var(--success); color: white; padding: 0.5rem 1rem; border: none; border-radius: var(--radius); cursor: pointer; margin-top: 0.5rem;">Copy JSON</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="sample" class="tab-content">
+                    <h3>Sample CSS File</h3>
+                    <p>Download our sample CSS file to see the expected format and test the import tool:</p>
+                    <div class="example-box">
+                        <div class="json-structure">
+/* Sample CSS includes:
+• Button components (primary, secondary, large)
+• Card layouts with hover effects  
+• Grid systems (auto-fit, 2-col, 3-col)
+• Typography scales (hero, section, lead text)
+• Flexbox utilities
+• Spacing utilities
+• Responsive breakpoints
+• Advanced components (glassmorphism, animations)
+*/
+                        </div>
+                    </div>
+                    <button onclick="downloadSampleCSS()" style="background: var(--secondary); color: white; padding: 0.75rem 1.5rem; border: none; border-radius: var(--radius); cursor: pointer; margin-right: 1rem;">Download Sample CSS</button>
+                    <button onclick="loadSampleCSS()" style="background: var(--primary); color: white; padding: 0.75rem 1.5rem; border: none; border-radius: var(--radius); cursor: pointer;">Load Sample & Convert</button>
+                </div>
+
+                <div class="warning-box" style="margin-top: 2rem;">
+                    <h4>⚠️ CSS Import Limitations</h4>
+                    <ul style="margin: 1rem 0; padding-left: 2rem;">
+                        <li>Complex selectors are simplified to class names</li>
+                        <li>Media queries are converted to Bricks responsive syntax</li>
+                        <li>Some CSS properties may not have direct Bricks equivalents</li>
+                        <li>Always review generated JSON before importing</li>
+                        <li>Pseudo-selectors (:hover, :focus) are handled via _cssCustom</li>
+                    </ul>
+                </div>
+
+                <div class="example-box" style="margin-top: 1rem;">
+                    <h4>💡 Best Practices for CSS Import</h4>
+                    <ul style="margin: 1rem 0; padding-left: 2rem;">
+                        <li>Use CSS custom properties (--variables) for consistency</li>
+                        <li>Keep class names semantic and BEM-friendly</li>
+                        <li>Organize CSS with clear sections and comments</li>
+                        <li>Test responsive breakpoints after import</li>
+                        <li>Review and customize generated IDs if needed</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header" onclick="toggleSection(this)">
                 <span>🔍 Object Explorer</span>
                 <span class="toggle-icon">▼</span>
             </div>
@@ -1029,6 +1133,331 @@
                 button.textContent = originalText;
                 button.style.background = 'var(--success)';
             }, 2000);
+        }
+
+        let convertedClasses = [];
+        let sampleCSSContent = '';
+
+        function showImportTab(tabName) {
+            // Hide all import tab contents
+            document.querySelectorAll('#upload, #paste, #sample').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all import tabs  
+            const importSection = document.querySelector('.section:nth-of-type(6)');
+            importSection.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+
+        function generateRandomId() {
+            const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+            let result = '';
+            for (let i = 0; i < 6; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
+        }
+
+        function parseCSS(cssText) {
+            const classes = [];
+            const rules = cssText.match(/\.[a-zA-Z][\w-]*[^{]*\{[^}]*\}/g) || [];
+            
+            rules.forEach(rule => {
+                const match = rule.match(/\.([a-zA-Z][\w-]*)[^{]*\{([^}]*)\}/);
+                if (match) {
+                    const className = match[1];
+                    const properties = match[2];
+                    
+                    // Skip hover and media query variants for now - handle them separately
+                    if (className.includes(':hover') || rule.includes('@media')) return;
+                    
+                    const bricksClass = {
+                        id: generateRandomId(),
+                        name: className,
+                        settings: parseProperties(properties),
+                        modified: Math.floor(Date.now() / 1000),
+                        user_id: 1,
+                        _exists: false
+                    };
+                    
+                    classes.push(bricksClass);
+                }
+            });
+            
+            return classes;
+        }
+
+        function parseProperties(cssProperties) {
+            const settings = {};
+            const props = cssProperties.split(';').filter(p => p.trim());
+            
+            props.forEach(prop => {
+                const [property, value] = prop.split(':').map(s => s.trim());
+                if (!property || !value) return;
+                
+                // Map CSS properties to Bricks settings
+                switch (property) {
+                    case 'display':
+                        settings._display = value;
+                        break;
+                    case 'padding':
+                        if (value.includes(' ')) {
+                            const values = value.split(' ');
+                            settings._padding = {
+                                top: values[0] || '0',
+                                right: values[1] || values[0] || '0',
+                                bottom: values[2] || values[0] || '0',
+                                left: values[3] || values[1] || values[0] || '0'
+                            };
+                        } else {
+                            settings._padding = {
+                                top: value,
+                                right: value,
+                                bottom: value,
+                                left: value
+                            };
+                        }
+                        break;
+                    case 'margin':
+                        if (value.includes(' ')) {
+                            const values = value.split(' ');
+                            settings._margin = {
+                                top: values[0] || '0',
+                                right: values[1] || values[0] || '0',
+                                bottom: values[2] || values[0] || '0',
+                                left: values[3] || values[1] || values[0] || '0'
+                            };
+                        } else {
+                            settings._margin = {
+                                top: value,
+                                right: value,
+                                bottom: value,
+                                left: value
+                            };
+                        }
+                        break;
+                    case 'background-color':
+                    case 'background':
+                        settings._background = {
+                            color: { raw: value }
+                        };
+                        break;
+                    case 'color':
+                        if (!settings._typography) settings._typography = {};
+                        settings._typography.color = { raw: value };
+                        break;
+                    case 'font-size':
+                        if (!settings._typography) settings._typography = {};
+                        settings._typography['font-size'] = value;
+                        break;
+                    case 'font-weight':
+                        if (!settings._typography) settings._typography = {};
+                        settings._typography['font-weight'] = value;
+                        break;
+                    case 'line-height':
+                        if (!settings._typography) settings._typography = {};
+                        settings._typography['line-height'] = value;
+                        break;
+                    case 'text-align':
+                        if (!settings._typography) settings._typography = {};
+                        settings._typography['text-align'] = value;
+                        break;
+                    case 'border-radius':
+                        settings._border = {
+                            radius: {
+                                top: value,
+                                right: value,
+                                bottom: value,
+                                left: value
+                            }
+                        };
+                        break;
+                    case 'flex-direction':
+                        settings._direction = value;
+                        break;
+                    case 'align-items':
+                        settings._alignItems = value;
+                        break;
+                    case 'justify-content':
+                        settings._justifyContent = value;
+                        break;
+                    case 'grid-template-columns':
+                        settings._gridTemplateColumns = value;
+                        break;
+                    case 'grid-template-rows':
+                        settings._gridTemplateRows = value;
+                        break;
+                    case 'gap':
+                        settings._gridGap = value;
+                        break;
+                    case 'width':
+                        settings._width = value;
+                        break;
+                    case 'height':
+                        settings._height = value;
+                        break;
+                    case 'max-width':
+                        settings._widthMax = value;
+                        break;
+                    case 'position':
+                        settings._position = value;
+                        break;
+                    default:
+                        // For unsupported properties, add to custom CSS
+                        if (!settings._cssCustom) {
+                            settings._cssCustom = '';
+                        }
+                        if (settings._cssCustom) settings._cssCustom += '\n';
+                        settings._cssCustom += `${property}: ${value};`;
+                        break;
+                }
+            });
+            
+            return Object.keys(settings).length > 0 ? settings : [];
+        }
+
+        // File upload handler
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.getElementById('cssFileInput');
+            if (fileInput) {
+                fileInput.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file && file.type === 'text/css') {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            document.getElementById('cssPreview').value = e.target.result;
+                        };
+                        reader.readAsText(file);
+                    }
+                });
+            }
+        });
+
+        function convertCSS() {
+            const cssText = document.getElementById('cssPreview').value;
+            if (!cssText.trim()) {
+                alert('Please upload a CSS file first.');
+                return;
+            }
+            
+            convertedClasses = parseCSS(cssText);
+            document.getElementById('jsonOutput').value = JSON.stringify(convertedClasses, null, 2);
+        }
+
+        function convertPastedCSS() {
+            const cssText = document.getElementById('cssInput').value;
+            if (!cssText.trim()) {
+                alert('Please paste some CSS code first.');
+                return;
+            }
+            
+            const classes = parseCSS(cssText);
+            document.getElementById('pastedJsonOutput').value = JSON.stringify(classes, null, 2);
+        }
+
+        function copyPastedJSON() {
+            const textarea = document.getElementById('pastedJsonOutput');
+            textarea.select();
+            document.execCommand('copy');
+            
+            // Show feedback
+            const button = event.target;
+            const originalText = button.textContent;
+            button.textContent = 'Copied!';
+            
+            setTimeout(() => {
+                button.textContent = originalText;
+            }, 2000);
+        }
+
+        function downloadJSON() {
+            if (convertedClasses.length === 0) {
+                alert('Please convert CSS to JSON first.');
+                return;
+            }
+            
+            const dataStr = JSON.stringify(convertedClasses, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'bricks-css-classes.json';
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function downloadSampleCSS() {
+            // Fetch the sample CSS file and trigger download
+            fetch('sample-styles.css')
+                .then(response => response.text())
+                .then(css => {
+                    const dataBlob = new Blob([css], {type: 'text/css'});
+                    const url = URL.createObjectURL(dataBlob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = 'sample-styles.css';
+                    link.click();
+                    URL.revokeObjectURL(url);
+                })
+                .catch(error => {
+                    console.error('Error downloading sample CSS:', error);
+                    alert('Error downloading sample CSS file.');
+                });
+        }
+
+        function loadSampleCSS() {
+            // Load sample CSS and convert it
+            fetch('sample-styles.css')
+                .then(response => response.text())
+                .then(css => {
+                    document.getElementById('cssPreview').value = css;
+                    sampleCSSContent = css;
+                    convertedClasses = parseCSS(css);
+                    document.getElementById('jsonOutput').value = JSON.stringify(convertedClasses, null, 2);
+                    
+                    // Switch to upload tab to show results
+                    showImportTab('upload');
+                })
+                .catch(error => {
+                    console.error('Error loading sample CSS:', error);
+                    alert('Error loading sample CSS file.');
+                });
+        }
+
+        function mergeWithExisting() {
+            if (convertedClasses.length === 0) {
+                alert('Please convert CSS to JSON first.');
+                return;
+            }
+            
+            if (bricksData.length === 0) {
+                alert('No existing Bricks data loaded. The converted classes will be used as the base.');
+                downloadJSON();
+                return;
+            }
+            
+            // Create merged array
+            const merged = [...bricksData, ...convertedClasses];
+            
+            // Download merged file
+            const dataStr = JSON.stringify(merged, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'merged-bricks-classes.json';
+            link.click();
+            URL.revokeObjectURL(url);
+            
+            alert(`Successfully merged ${convertedClasses.length} new classes with ${bricksData.length} existing classes.`);
         }
 
         async function loadBricksData() {
